@@ -1,14 +1,14 @@
-![status](https://secure.travis-ci.org/wearefractal/APPNAME.png?branch=master)
+![status](https://secure.travis-ci.org/wearefractal/moxy.png?branch=master)
 
 ## Information
 
 <table>
 <tr> 
-<td>Package</td><td>APPNAME</td>
+<td>Package</td><td>moxy</td>
 </tr>
 <tr>
 <td>Description</td>
-<td>NOTHING HERE YET</td>
+<td>Simple and configurable HTTP injection/intercept proxy</td>
 </tr>
 <tr>
 <td>Node Version</td>
@@ -19,12 +19,40 @@
 ## Usage
 
 ```coffee-script
-NOTHING HERE YET
+moxy = require 'moxy'
+express = require 'express'
+
+app = express()
+app.use express.bodyParser()
+app.use express.methodOverride()
+
+proxy = moxy.createProxy()
+app.all '/proxy/:id/:url', proxy
+
+proxy.use 'processRequest', (req, next) ->
+  # req = client request to proxy
+
+proxy.use 'processResponse', (req, res, next) ->
+  # req = client request to proxy
+  # res = response from requested server
+
+
+app.listen 8080
+```
+
+The id you use determines which set of cookies to use. This allows multiple users to retain cookies between requests.
+
+The proxy supports GET/POST/PUT/DELETE
+
+Example request for http://www.google.com/imghp?hl=en&tab=wi&authuser=0
+
+```
+GET localhost:8080/proxy/main/www.google.com/imghp?hl=en&tab=wi&authuser=0
 ```
 
 ## Examples
 
-You can view more examples in the [example folder.](https://github.com/wearefractal/APPNAME/tree/master/examples)
+You can view more examples in the [example folder.](https://github.com/wearefractal/moxy/tree/master/examples)
 
 ## LICENSE
 

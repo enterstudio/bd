@@ -1,18 +1,22 @@
 {
-   "name":"APPNAME",
-   "description":"Nothing here yet",
+   "name":"moxy",
+   "description":"Simple and configurable HTTP injection/intercept proxy",
    "version":"0.0.1",
-   "homepage":"http://github.com/wearefractal/APPNAME",
-   "repository":"git://github.com/wearefractal/APPNAME.git",
+   "homepage":"http://github.com/wearefractal/moxy",
+   "repository":"git://github.com/wearefractal/moxy.git",
    "author":"Fractal <contact@wearefractal.com> (http://wearefractal.com/)",
    "main":"./index.js",
    
    "dependencies":{
-      "coffee-script":"*"
+      "coffee-script":"*",
+      "async": "*",
+      "request": "*",
+      "qs": "*"
    },
    "devDependencies":{
       "mocha":"*",
-      "should":"*"
+      "should":"*",
+      "express":"*"
    },
    "scripts":{
       "test":"mocha --compilers coffee:coffee-script"
@@ -23,7 +27,7 @@
    "licenses":[
       {
          "type":"MIT",
-         "url":"http://github.com/wearefractal/APPNAME/raw/master/LICENSE"
+         "url":"http://github.com/wearefractal/moxy/raw/master/LICENSE"
       }
    ]
 }
