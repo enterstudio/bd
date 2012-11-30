@@ -27,7 +27,7 @@ app.use express.bodyParser()
 app.use express.methodOverride()
 
 proxy = moxy.createProxy()
-app.all '/proxy/:id/:url', proxy
+app.all '/proxy/:id', proxy
 
 proxy.use 'processRequest', (req, next) ->
   # req = client request to proxy
@@ -47,7 +47,7 @@ The proxy supports GET/POST/PUT/DELETE
 Example request for http://www.google.com/imghp?hl=en&tab=wi&authuser=0
 
 ```
-GET localhost:8080/proxy/main/www.google.com/imghp?hl=en&tab=wi&authuser=0
+GET localhost:8080/proxy/main/?surl=http://www.google.com/imghp?hl=en&tab=wi&authuser=0
 ```
 
 ## Examples
