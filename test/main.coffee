@@ -17,19 +17,29 @@ describe 'moxy', ->
       proxy = moxy.createProxy()
 
       app = express()
+      app.use express.bodyParser()
       app.all '/proxy/:id', proxy
       app.listen 8008
 
+      second = false
       app2 = express()
+      app2.use express.cookieParser()
+      app2.use express.bodyParser()
       app2.get '/test', (req, res) ->
         should.exist req.header('Client-Header')
         req.header('Client-Header').should.equal 'wot'
         should.exist req.query.wat
         req.query.wat.should.equal 'dood'
+        if second
+          should.exist req.cookies.wat
+          req.cookies.wat.should.equal 'dood'
+
         res
           .status(200)
+          .cookie('wat','dood')
           .set('Custom-Header', 'test')
-          .send 'hello world'
+          .send('hello world')
+        second = true
 
       app2.listen 8009
 
@@ -45,7 +55,17 @@ describe 'moxy', ->
         res.statusCode.should.equal 200
         res.headers['custom-header'].should.equal 'test'
         body.should.equal 'hello world'
-        done()
+
+        # test cookie jar
+        request "http://localhost:8008/proxy/test/?surl=http://localhost:8009/test?wat=dood", opt, (err, res, body) ->
+          should.not.exist err, 'res error'
+          should.exist res, 'res'
+          should.exist body, 'body'
+          should.exist res.headers['custom-header']
+          res.statusCode.should.equal 200
+          res.headers['custom-header'].should.equal 'test'
+          body.should.equal 'hello world'
+          done()
 
   describe 'use()', ->
     it 'should work', (done) ->

@@ -1,11 +1,10 @@
 request = require 'request'
 async = require 'async'
 qs = require 'qs'
+silo = require 'silo'
 
 ignoredHeaders = ["cookie","referer","host","connection","accept-encoding"]
-defaultCookies =
-  get: (id, cb) -> cb()
-  set: (id, cookies, cb) -> cb()
+defaultCookies = new silo.Memory()
 
 module.exports =
   createProxy: (opt={}) ->
@@ -24,10 +23,12 @@ module.exports =
         opt.cookies.get id, (err, cookie) ->
           return res.send 500, err if err?
           jar = request.jar()
-          jar.add cookie if cookie?
+          jar.add request.cookie cookie if cookie?
 
           head = {}
           head[k]=v for k,v of req.headers when not (k.toLowerCase() in ignoredHeaders)
+
+          delete req.body if typeof req.body is 'object'
 
           ropt =
             headers: head
